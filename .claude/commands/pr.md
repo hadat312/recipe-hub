@@ -10,7 +10,7 @@ Pass `draft` as the argument (i.e. the command was invoked as `/pr draft`) to op
 ## Steps
 
 1. Check for uncommitted changes (`git status`). If any exist, stage and commit them with a message that describes what changed and why — never commit silently without checking first.
-2. Determine the base branch (usually `main` or `master` — check the repo's default with `git remote show origin` or infer from `git branch -r` if unsure). Confirm it exists on the remote with `git ls-remote --heads origin <base>`.
+2. Determine the base branch: this project uses git-flow — feature branches merge into `develop`, never directly into `main` (`main` is production/stable, only `develop` merges into it, and that's a separate, deliberate action). So the base is `develop` if it exists on the remote (`git ls-remote --heads origin develop`); only fall back to `main`/`master` if there's no `develop` branch. Never default to `main` when `develop` exists — if you're ever about to target `main`, stop and confirm with the user first.
 3. Push the current branch to `origin` (`git push -u origin <branch>`).
 4. Check whether a PR already exists for this branch: `gh pr list --head <branch>`. If one does, just push new commits and report its existing URL — do not create a duplicate, and leave its draft/ready state as-is.
 5. Read the PR template at `../templates/pull_request_template.md` (relative to the repo root) and fill in **every** section based on the actual diff and commits on this branch (use `git log <base>..HEAD` and `git diff <base>...HEAD` to see what actually changed — don't guess):
